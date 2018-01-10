@@ -7,9 +7,6 @@ CMD ["/sbin/my_init"]
 # Set /peerstreamer as working directory
 WORKDIR /peerstreamer
 
-# Create environment variable used to configure peerstreamer-ng binding iface
-ENV PSNGIFACE eth0
-
 # Copy required files into the container at /peerstreamer
 ADD requirements.txt /peerstreamer/
 
@@ -17,7 +14,10 @@ RUN mkdir /peerstreamer/serf-python
 ADD serf-python.tar.gz /peerstreamer/serf-python/
 
 # Install required packages
-RUN apt update && apt install -y python2.7 python-pip git
+RUN apt update && apt install -y python2.7 python-pip git libmicrohttpd-dev \
+        libjansson-dev libnice-dev libssl-dev libsrtp-dev libsofia-sip-ua-dev \
+        libglib2.0-dev libopus-dev libogg-dev libcurl4-openssl-dev pkg-config \
+        gengetopt libtool automake
 
 # Install python requirements
 RUN pip install -r requirements.txt
@@ -29,7 +29,7 @@ RUN cd /peerstreamer/serf-python && \
 RUN rm -rf /peerstreamer/serf-python
 
 # Build peerstreamer
-RUN git clone -b netcommons-demo \
+RUN git clone -b webrtp \
         https://ans.disi.unitn.it/redmine/peerstreamer-src.git \
             peerstreamer
 RUN cd /peerstreamer/peerstreamer && make
@@ -39,7 +39,8 @@ RUN git clone \
         https://ans.disi.unitn.it/redmine/psng-pyserf.git \
             psng-pyserf
 
-RUN apt remove -y git && apt autoremove -y
+RUN apt remove -y git automake \
+        && apt autoremove -y
 
 # Create script for running psng-pyserf service
 RUN mkdir /etc/service/psng-pyserf
