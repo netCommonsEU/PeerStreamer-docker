@@ -1,8 +1,10 @@
-# http://phusion.github.io/baseimage-docker/
-FROM phusion/baseimage:0.9.22
+FROM debian:stable-slim
+MAINTAINER Luca Baldesi <luca.baldesi@unitn.it>
 
-# Use baseimage-docker's init system.
-CMD ["/sbin/my_init"]
+# Install supervisord and automatic upgrade stuff
+RUN apt-get update \
+ && apt-get install -y supervisor unattended-upgrades cron \
+ && rm -rf /var/lib/apt/lists/*
 
 # Set /peerstreamer as working directory
 WORKDIR /peerstreamer
@@ -29,7 +31,7 @@ RUN cd /peerstreamer/serf-python && \
 RUN rm -rf /peerstreamer/serf-python
 
 # Build peerstreamer
-RUN git clone -b webrtp \
+RUN git clone -b devel \
         https://ans.disi.unitn.it/redmine/peerstreamer-src.git \
             peerstreamer
 RUN cd /peerstreamer/peerstreamer && make
@@ -38,17 +40,17 @@ RUN cd /peerstreamer/peerstreamer && make
 RUN git clone \
         https://ans.disi.unitn.it/redmine/psng-pyserf.git \
             psng-pyserf
+RUN chmod +x psng-pyserf/psng-pyserf.py
 
 RUN apt remove -y git automake \
         && apt autoremove -y
 
-# Create script for running psng-pyserf service
-RUN mkdir /etc/service/psng-pyserf
-ADD psng-pyserf.sh /etc/service/psng-pyserf/run
-
-# Create script for running peerstreamer
-RUN mkdir /etc/service/peerstreamer
-ADD peerstreamer.sh /etc/service/peerstreamer/run
-
 # Clean up APT when done.
 RUN apt clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+COPY supervisord.conf /etc/supervisor/supervisord.conf
+COPY cron-supervisord.conf /etc/supervisor/conf.d/cron.conf
+COPY psng-supervisord.conf /etc/supervisor/conf.d/psng.conf
+COPY pyserf-supervisord.conf /etc/supervisor/conf.d/pyserf.conf
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
