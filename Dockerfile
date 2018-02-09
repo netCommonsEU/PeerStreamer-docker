@@ -37,10 +37,10 @@ RUN git clone -b devel \
 RUN cd /peerstreamer/peerstreamer && make
 
 # Clone psng-pyserf
-RUN git clone \
+RUN git clone -b source_broadcasting\
         https://ans.disi.unitn.it/redmine/psng-pyserf.git \
             psng-pyserf
-RUN chmod +x psng-pyserf/psng-pyserf.py
+RUN chmod +x psng-pyserf/psng_pyserf.py
 
 RUN apt remove -y git automake \
         && apt autoremove -y
