@@ -19,7 +19,7 @@ ADD serf-python.tar.gz /peerstreamer/serf-python/
 RUN apt update && apt install -y python2.7 python-pip git libmicrohttpd-dev \
         libjansson-dev libnice-dev libssl-dev libsrtp-dev libsofia-sip-ua-dev \
         libglib2.0-dev libopus-dev libogg-dev libcurl4-openssl-dev pkg-config \
-        gengetopt libtool automake
+        gengetopt libtool automake iproute2
 
 # Install python requirements
 RUN pip install -r requirements.txt
