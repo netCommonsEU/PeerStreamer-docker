@@ -31,7 +31,7 @@ RUN cd /peerstreamer/serf-python && \
 RUN rm -rf /peerstreamer/serf-python
 
 # Build peerstreamer
-RUN git clone -b devel \
+RUN git clone -b master \
         https://ans.disi.unitn.it/redmine/peerstreamer-src.git \
             peerstreamer
 RUN cd /peerstreamer/peerstreamer && make
