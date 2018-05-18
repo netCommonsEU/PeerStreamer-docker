@@ -32,13 +32,13 @@ RUN rm -rf /peerstreamer/serf-python
 
 # Build peerstreamer
 RUN git clone -b master \
-        https://ans.disi.unitn.it/redmine/peerstreamer-src.git \
+        https://github.com/netCommonsEU/PeerStreamer-ng.git \
             peerstreamer
 RUN cd /peerstreamer/peerstreamer && make
 
 # Clone psng-pyserf
 RUN git clone -b source_broadcasting\
-        https://ans.disi.unitn.it/redmine/psng-pyserf.git \
+        https://github.com/netCommonsEU/psng-pyserf.git \
             psng-pyserf
 RUN chmod +x psng-pyserf/psng_pyserf.py
 
