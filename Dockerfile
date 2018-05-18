@@ -31,7 +31,7 @@ RUN cd /peerstreamer/serf-python && \
 RUN rm -rf /peerstreamer/serf-python
 
 # Build peerstreamer
-RUN git clone -b master \
+RUN git clone -b testing \
         https://github.com/netCommonsEU/PeerStreamer-ng.git \
             peerstreamer
 RUN cd /peerstreamer/peerstreamer && make
